@@ -1,0 +1,17 @@
+[project]
+name = "tax-data-automation-lab"
+version = "0.1.0"
+description = "Synthetic tax data automation lab with Python, SQL, rules, validation and reconciliation."
+requires-python = ">=3.9"
+dependencies = [
+  "duckdb>=1.1.0",
+  "pandas>=2.2.0",
+  "pyyaml>=6.0.0"
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
