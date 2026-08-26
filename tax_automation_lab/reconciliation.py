@@ -37,10 +37,15 @@ def build_exception_report(reconciled: pd.DataFrame, validation_issues: pd.DataF
     columns = [
         "transaction_id",
         "transaction_date",
+        "entity",
+        "business_unit",
         "supplier_customer",
         "account_code",
         "transaction_type",
         "jurisdiction",
+        "counterparty_country",
+        "related_party",
+        "evidence_status",
         "net_amount",
         "supplied_gst_amount",
         "calculated_gst",
@@ -66,6 +71,25 @@ def build_summary(reconciled: pd.DataFrame) -> pd.DataFrame:
         )
         .reset_index()
         .sort_values(["exceptions", "transactions"], ascending=[False, False])
+    )
+
+
+def build_scenario_summary(reconciled: pd.DataFrame) -> pd.DataFrame:
+    return (
+        reconciled.groupby(["business_unit", "tax_category"], dropna=False)
+        .agg(
+            transactions=("transaction_id", "count"),
+            related_party_transactions=("related_party", "sum"),
+            cross_border_transactions=(
+                "jurisdiction",
+                lambda values: int((values == "CROSS_BORDER").sum()),
+            ),
+            net_amount=("net_amount", "sum"),
+            calculated_gst=("calculated_gst", "sum"),
+            exceptions=("exception_flag", "sum"),
+        )
+        .reset_index()
+        .sort_values(["exceptions", "net_amount"], ascending=[False, False])
     )
 
 
