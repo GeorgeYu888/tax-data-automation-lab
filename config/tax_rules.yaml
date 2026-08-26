@@ -1,0 +1,82 @@
+metadata:
+  ruleset_name: demo_gst_classification_rules
+  version: "2026.08"
+  description: >
+    Simplified demo rules for classifying synthetic finance transactions.
+    These rules are for portfolio demonstration only and are not tax advice.
+
+defaults:
+  tax_category: NEEDS_REVIEW
+  expected_gst_rate: null
+  review_reason: "No matching classification rule"
+
+rules:
+  - id: SALES_STANDARD_GST
+    priority: 10
+    description: Standard domestic taxable sales.
+    conditions:
+      account_code_in: ["4000"]
+      jurisdiction_in: ["AU"]
+      transaction_type_in: ["SALE"]
+    result:
+      tax_category: GST_TAXABLE
+      expected_gst_rate: 0.10
+      review_reason: ""
+
+  - id: EXPORT_GST_FREE
+    priority: 20
+    description: Export sales treated as GST-free in this simplified demo.
+    conditions:
+      account_code_in: ["4010"]
+      jurisdiction_in: ["EXPORT"]
+      transaction_type_in: ["SALE"]
+    result:
+      tax_category: GST_FREE
+      expected_gst_rate: 0.00
+      review_reason: ""
+
+  - id: BANK_FEES_INPUT_TAXED
+    priority: 30
+    description: Bank fees classified as input taxed in this simplified demo.
+    conditions:
+      account_code_in: ["6200"]
+      transaction_type_in: ["EXPENSE"]
+    result:
+      tax_category: INPUT_TAXED
+      expected_gst_rate: 0.00
+      review_reason: ""
+
+  - id: WAGES_OUT_OF_SCOPE
+    priority: 40
+    description: Payroll and wages outside GST scope in this simplified demo.
+    conditions:
+      account_code_in: ["7000"]
+      transaction_type_in: ["PAYROLL"]
+    result:
+      tax_category: OUT_OF_SCOPE
+      expected_gst_rate: 0.00
+      review_reason: ""
+
+  - id: OFFICE_EXPENSE_STANDARD_GST
+    priority: 50
+    description: Ordinary domestic supplier expenses with GST.
+    conditions:
+      account_code_in: ["5100", "5200"]
+      jurisdiction_in: ["AU"]
+      transaction_type_in: ["EXPENSE"]
+    result:
+      tax_category: GST_TAXABLE
+      expected_gst_rate: 0.10
+      review_reason: ""
+
+  - id: MISSING_TAX_INVOICE_REVIEW
+    priority: 5
+    description: Any GST-bearing supplier expense without a tax invoice requires review.
+    conditions:
+      transaction_type_in: ["EXPENSE"]
+      tax_invoice_available_in: [false]
+      supplied_gst_amount_gt: 0
+    result:
+      tax_category: NEEDS_REVIEW
+      expected_gst_rate: null
+      review_reason: "GST claimed but tax invoice missing"
