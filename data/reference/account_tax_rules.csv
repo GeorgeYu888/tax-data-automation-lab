@@ -1,0 +1,8 @@
+account_code,account_name,default_transaction_type,default_tax_category,owner,review_frequency
+4000,Domestic Sales,SALE,GST_TAXABLE,Tax Operations,Monthly
+4010,Export Sales,SALE,GST_FREE,Tax Operations,Monthly
+5100,Office Supplies,EXPENSE,GST_TAXABLE,Finance Operations,Quarterly
+5200,Software Subscriptions,EXPENSE,GST_TAXABLE,Finance Operations,Quarterly
+6200,Bank Fees,EXPENSE,INPUT_TAXED,Finance Operations,Quarterly
+7000,Wages and Salaries,PAYROLL,OUT_OF_SCOPE,Payroll,Quarterly
+
