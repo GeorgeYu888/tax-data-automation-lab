@@ -9,6 +9,7 @@ def render_audit_summary(
     reconciled: pd.DataFrame,
     exceptions: pd.DataFrame,
     summary: pd.DataFrame,
+    scenario_summary: pd.DataFrame,
     ruleset_name: str,
     ruleset_version: str,
 ) -> str:
@@ -51,12 +52,28 @@ def render_audit_summary(
     lines.extend(
         [
             "",
+            "## Enterprise Scenario Summary",
+            "",
+            "| Business unit | Tax category | Transactions | Related party | Cross-border | Net amount | Exceptions |",
+            "| --- | --- | ---: | ---: | ---: | ---: | ---: |",
+        ]
+    )
+    for row in scenario_summary.head(12).itertuples():
+        lines.append(
+            f"| {row.business_unit} | {row.tax_category} | {row.transactions} | "
+            f"{row.related_party_transactions} | {row.cross_border_transactions} | "
+            f"{row.net_amount:.2f} | {row.exceptions} |"
+        )
+
+    lines.extend(
+        [
+            "",
             "## Reviewer Notes",
             "",
             "- This output is designed for human review, not automatic tax lodgement.",
             "- Rules are simplified and intentionally transparent so a tax specialist can challenge or refine them.",
             "- Exceptions are preserved instead of hidden, because traceability matters in tax and finance workflows.",
-            "- The synthetic data includes clean records, missing evidence, unknown mappings and reconciliation breaks.",
+            "- The synthetic data includes clean records, missing evidence, unknown mappings, reconciliation breaks, related-party transactions, offshore payments, employee benefits, R&D costs, trust/fund distributions, consolidation eliminations and treasury items.",
             "",
             "## Next Improvements",
             "",
@@ -76,4 +93,3 @@ def _reason_counts(exceptions: pd.DataFrame) -> dict[str, int]:
             if reason:
                 counts[reason] = counts.get(reason, 0) + 1
     return dict(sorted(counts.items(), key=lambda item: (-item[1], item[0])))
-
