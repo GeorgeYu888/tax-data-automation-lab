@@ -1,14 +1,37 @@
-transaction_id,transaction_date,entity,supplier_customer,account_code,transaction_type,jurisdiction,net_amount,supplied_gst_amount,tax_invoice_available,ledger_tax_category,description
-TXN-0001,2026-07-01,DemoCo AU,Metro Retail Pty Ltd,4000,SALE,AU,1200.00,120.00,true,GST_TAXABLE,Domestic taxable sale
-TXN-0002,2026-07-02,DemoCo AU,Pacific Export Ltd,4010,SALE,EXPORT,850.00,0.00,true,GST_FREE,Export sale
-TXN-0003,2026-07-03,DemoCo AU,Office Supplies Co,5100,EXPENSE,AU,300.00,30.00,true,GST_TAXABLE,Stationery and supplies
-TXN-0004,2026-07-04,DemoCo AU,Cloud Tools Vendor,5200,EXPENSE,AU,540.00,54.00,true,GST_TAXABLE,Software subscription
-TXN-0005,2026-07-05,DemoCo AU,Big Bank,6200,EXPENSE,AU,42.00,0.00,true,INPUT_TAXED,Bank merchant fee
-TXN-0006,2026-07-06,DemoCo AU,Payroll Batch,7000,PAYROLL,AU,4200.00,0.00,false,OUT_OF_SCOPE,Wages
-TXN-0007,2026-07-07,DemoCo AU,Warehouse Services,5100,EXPENSE,AU,900.00,90.00,false,GST_TAXABLE,Missing invoice but GST claimed
-TXN-0008,2026-07-08,DemoCo AU,Metro Retail Pty Ltd,4000,SALE,AU,1500.00,140.00,true,GST_TAXABLE,GST amount does not reconcile
-TXN-0009,2026-07-09,DemoCo AU,Unknown Vendor,9999,EXPENSE,AU,210.00,21.00,true,GST_TAXABLE,Unknown account mapping
-TXN-0010,2026-07-10,DemoCo AU,Intercompany Recharge,4990,SALE,INTERCOMPANY,725.00,0.00,true,OUT_OF_SCOPE,Unmapped intercompany recharge
-TXN-0011,2026-07-11,DemoCo AU,Office Supplies Co,5100,EXPENSE,AU,-80.00,-8.00,true,GST_TAXABLE,Credit note
-TXN-0012,2026-07-12,DemoCo AU,Cloud Tools Vendor,5200,EXPENSE,AU,0.00,0.00,true,GST_TAXABLE,Zero value test record
-
+transaction_id,transaction_date,entity,business_unit,supplier_customer,account_code,transaction_type,jurisdiction,counterparty_country,related_party,net_amount,supplied_gst_amount,tax_invoice_available,evidence_status,ledger_tax_category,description
+TXN-0001,2026-07-01,DemoCo Australia Ltd,AU Retail,Metro Retail Pty Ltd,4000,SALE,AU,AU,false,1200.00,120.00,true,COMPLETE,GST_TAXABLE,Domestic taxable sale
+TXN-0002,2026-07-02,DemoCo Australia Ltd,AU Export,Pacific Export Ltd,4010,SALE,EXPORT,NZ,false,850.00,0.00,true,COMPLETE,GST_FREE,Export sale
+TXN-0003,2026-07-03,DemoCo Australia Ltd,Corporate,Office Supplies Co,5100,EXPENSE,AU,AU,false,300.00,30.00,true,COMPLETE,GST_TAXABLE,Stationery and supplies
+TXN-0004,2026-07-04,DemoCo Australia Ltd,Technology,Cloud Tools Vendor,5200,EXPENSE,AU,AU,false,540.00,54.00,true,COMPLETE,GST_TAXABLE,Domestic software subscription
+TXN-0005,2026-07-05,DemoCo Australia Ltd,Treasury,Big Bank,6200,EXPENSE,AU,AU,false,42.00,0.00,true,COMPLETE,INPUT_TAXED,Bank merchant fee
+TXN-0006,2026-07-06,DemoCo Australia Ltd,People,Payroll Batch,7000,PAYROLL,AU,AU,false,4200.00,0.00,false,COMPLETE,OUT_OF_SCOPE,Wages
+TXN-0007,2026-07-07,DemoCo Australia Ltd,Operations,Warehouse Services,5100,EXPENSE,AU,AU,false,900.00,90.00,false,MISSING,GST_TAXABLE,Missing invoice but GST claimed
+TXN-0008,2026-07-08,DemoCo Australia Ltd,AU Retail,Metro Retail Pty Ltd,4000,SALE,AU,AU,false,1500.00,140.00,true,COMPLETE,GST_TAXABLE,GST amount does not reconcile
+TXN-0009,2026-07-09,DemoCo Australia Ltd,Corporate,Unknown Vendor,9999,EXPENSE,AU,AU,false,210.00,21.00,true,INCOMPLETE,GST_TAXABLE,Unknown account mapping
+TXN-0010,2026-07-10,DemoCo Australia Ltd,Corporate,DemoCo Services Pty Ltd,4990,INTERCOMPANY,INTERCOMPANY,AU,true,725.00,0.00,true,COMPLETE,OUT_OF_SCOPE,Domestic intra-group recharge requiring consolidation treatment
+TXN-0011,2026-07-11,DemoCo Australia Ltd,Corporate,Office Supplies Co,5100,ADJUSTMENT,AU,AU,false,-80.00,-8.00,true,COMPLETE,GST_TAXABLE,Credit note for domestic expense
+TXN-0012,2026-07-12,DemoCo Australia Ltd,Technology,Cloud Tools Vendor,5200,EXPENSE,AU,AU,false,0.00,0.00,true,COMPLETE,GST_TAXABLE,Zero value test record
+TXN-0013,2026-07-13,DemoCo Australia Ltd,Shared Services,DemoCo Singapore Pte Ltd,8100,INTERCOMPANY,CROSS_BORDER,SG,true,240000.00,0.00,true,INCOMPLETE,TRANSFER_PRICING_REVIEW,Management service fee from related offshore entity
+TXN-0014,2026-07-14,DemoCo Australia Ltd,Technology,DemoCo IP Holdings LLC,8200,ROYALTY,CROSS_BORDER,US,true,180000.00,0.00,true,INCOMPLETE,WHT_REVIEW,Royalty payment to offshore related party
+TXN-0015,2026-07-15,DemoCo Australia Ltd,Treasury,DemoCo Finance UK Ltd,8300,INTEREST,CROSS_BORDER,GB,true,95000.00,0.00,true,COMPLETE,WHT_REVIEW,Interest payment on intercompany loan
+TXN-0016,2026-07-16,DemoCo Australia Ltd,Treasury,Global Parent Inc,8400,DIVIDEND,CROSS_BORDER,US,true,310000.00,0.00,true,COMPLETE,WHT_REVIEW,Dividend distribution to offshore parent
+TXN-0017,2026-07-17,DemoCo Australia Ltd,People,Executive Dining Venue,8500,EMPLOYEE_BENEFIT,AU,AU,false,2200.00,220.00,true,COMPLETE,FBT_REVIEW,Employee entertainment event
+TXN-0018,2026-07-18,DemoCo Australia Ltd,People,Fleet Provider Pty Ltd,8510,EMPLOYEE_BENEFIT,AU,AU,false,1450.00,145.00,true,INCOMPLETE,FBT_REVIEW,Company vehicle private-use data incomplete
+TXN-0019,2026-07-19,DemoCo Australia Ltd,Product Lab,Prototype Materials Pty Ltd,8600,R_AND_D,AU,AU,false,38000.00,3800.00,true,COMPLETE,R_AND_D_REVIEW,Prototype materials mapped to R&D activity
+TXN-0020,2026-07-20,DemoCo Australia Ltd,Product Lab,Offshore Research Contractor,8610,R_AND_D,CROSS_BORDER,IN,false,52000.00,0.00,true,INCOMPLETE,R_AND_D_REVIEW,Overseas contractor cost tagged to R&D project
+TXN-0021,2026-07-21,DemoCo Australia Ltd,Investor Relations,Managed Fund Trust,8700,TRUST_DISTRIBUTION,AU,JP,false,64000.00,0.00,true,COMPLETE,TRUST_DISTRIBUTION_REVIEW,MIT-style distribution to non-resident investor
+TXN-0022,2026-07-22,DemoCo Family Office Pty Ltd,Private Group,Family Business Trust,8710,TRUST_DISTRIBUTION,AU,AU,true,42000.00,0.00,true,INCOMPLETE,TRUST_DISTRIBUTION_REVIEW,Family business trust distribution needs entitlement evidence
+TXN-0023,2026-07-23,DemoCo Australia Ltd,Corporate,DemoCo Logistics Pty Ltd,4990,INTERCOMPANY,INTERCOMPANY,AU,true,125000.00,0.00,true,COMPLETE,CONSOLIDATION_ELIMINATION,Wholly owned group elimination entry
+TXN-0024,2026-07-24,DemoCo Australia Ltd,Corporate,DemoCo Manufacturing Pty Ltd,4990,INTERCOMPANY,INTERCOMPANY,AU,true,88000.00,8800.00,true,COMPLETE,GST_TAXABLE,Ledger treated intra-group recharge as taxable
+TXN-0025,2026-07-25,DemoCo Australia Ltd,Technology,EU SaaS Platform GmbH,8800,IMPORT_SERVICE,CROSS_BORDER,DE,false,76000.00,0.00,true,COMPLETE,REVERSE_CHARGE_REVIEW,Imported digital service for enterprise platform
+TXN-0026,2026-07-26,DemoCo Australia Ltd,Supply Chain,Customs Broker Pty Ltd,8810,IMPORT_GOODS,AU,CN,false,118000.00,11800.00,true,COMPLETE,GST_TAXABLE,Imported inventory with GST captured from broker statement
+TXN-0027,not-a-date,DemoCo Australia Ltd,Corporate,Domestic Supplier Pty Ltd,5100,EXPENSE,AU,AU,false,400.00,40.00,true,COMPLETE,GST_TAXABLE,Invalid source-system date
+TXN-0028,2026-07-28,DemoCo Australia Ltd,Corporate,Domestic Supplier Pty Ltd,5100,EXPENSE,AU,AU,false,100.00,140.00,true,COMPLETE,GST_TAXABLE,GST exceeds net amount data issue
+TXN-0029,2026-07-29,DemoCo Australia Ltd,Treasury,Insurance Provider Ltd,6250,EXPENSE,AU,AU,false,2400.00,0.00,true,COMPLETE,INPUT_TAXED,Insurance premium mapped as input taxed in demo
+TXN-0030,2026-07-30,DemoCo Australia Ltd,Operations,Plant Equipment Pty Ltd,8900,CAPEX,AU,AU,false,450000.00,45000.00,true,COMPLETE,CAPEX_REVIEW,Capital equipment purchase requiring asset register match
+TXN-0031,2026-07-31,DemoCo Australia Ltd,Tax,Year End Tax Journal,9000,JOURNAL,AU,AU,false,680000.00,0.00,false,COMPLETE,TAX_PROVISION_REVIEW,Income tax provision journal
+TXN-0032,2026-07-31,DemoCo Australia Ltd,Tax,Deferred Tax Journal,9010,JOURNAL,AU,AU,false,-125000.00,0.00,false,COMPLETE,TAX_PROVISION_REVIEW,Deferred tax adjustment journal
+TXN-0033,2026-07-31,DemoCo Australia Ltd,Treasury,Hedge Counterparty Bank,9100,INVESTMENT,AU,AU,false,72000.00,0.00,true,COMPLETE,FINANCIAL_SUPPLY_REVIEW,Derivative gain from hedging program
+TXN-0034,2026-07-31,DemoCo Australia Ltd,Treasury,Hedge Counterparty Bank,9110,INVESTMENT,CROSS_BORDER,US,false,-36000.00,0.00,true,COMPLETE,FINANCIAL_SUPPLY_REVIEW,FX hedge loss with offshore counterparty
+TXN-0035,2026-07-31,DemoCo Australia Ltd,People,State Revenue Office,7100,PAYROLL_TAX,AU,AU,false,22000.00,0.00,true,COMPLETE,OUT_OF_SCOPE,Payroll tax accrual outside GST scope
+TXN-0036,2026-07-31,DemoCo Australia Ltd,Corporate,Supplier Adjustment Pty Ltd,5300,ADJUSTMENT,AU,AU,false,-200.00,-20.00,true,COMPLETE,GST_TAXABLE,Adjustment note for prior-period GST credit
