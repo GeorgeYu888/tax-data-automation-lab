@@ -1,8 +1,28 @@
-account_code,account_name,default_transaction_type,default_tax_category,owner,review_frequency
-4000,Domestic Sales,SALE,GST_TAXABLE,Tax Operations,Monthly
-4010,Export Sales,SALE,GST_FREE,Tax Operations,Monthly
-5100,Office Supplies,EXPENSE,GST_TAXABLE,Finance Operations,Quarterly
-5200,Software Subscriptions,EXPENSE,GST_TAXABLE,Finance Operations,Quarterly
-6200,Bank Fees,EXPENSE,INPUT_TAXED,Finance Operations,Quarterly
-7000,Wages and Salaries,PAYROLL,OUT_OF_SCOPE,Payroll,Quarterly
-
+account_code,account_name,default_transaction_type,default_tax_category,owner,review_frequency,enterprise_control
+4000,Domestic Sales,SALE,GST_TAXABLE,Tax Operations,Monthly,BAS output mapping
+4010,Export Sales,SALE,GST_FREE,Tax Operations,Monthly,Export evidence review
+4990,Intercompany Recharges,INTERCOMPANY,CONSOLIDATION_ELIMINATION,Group Tax,Monthly,Consolidation elimination and related-party review
+5100,Office Supplies,EXPENSE,GST_TAXABLE,Finance Operations,Quarterly,Tax invoice and GST credit control
+5200,Software Subscriptions,EXPENSE,GST_TAXABLE,Finance Operations,Quarterly,Supplier jurisdiction and reverse-charge triage
+5300,GST Adjustment Notes,ADJUSTMENT,GST_TAXABLE,Tax Operations,Monthly,Adjustment note support
+6200,Bank Fees,EXPENSE,INPUT_TAXED,Finance Operations,Quarterly,Financial supply classification
+6250,Insurance Premiums,EXPENSE,INPUT_TAXED,Finance Operations,Quarterly,Financial supply classification
+7000,Wages and Salaries,PAYROLL,OUT_OF_SCOPE,Payroll,Quarterly,GST exclusion control
+7100,Payroll Tax,PAYROLL_TAX,OUT_OF_SCOPE,Payroll,Quarterly,State tax accrual review
+8100,Intercompany Management Fees,INTERCOMPANY,TRANSFER_PRICING_REVIEW,International Tax,Monthly,Transfer pricing documentation check
+8200,Royalty Payments,ROYALTY,WHT_REVIEW,International Tax,Monthly,Withholding tax and treaty evidence check
+8300,Interest Payments,INTEREST,WHT_REVIEW,Treasury Tax,Monthly,Debt funding and withholding check
+8400,Dividend Payments,DIVIDEND,WHT_REVIEW,Treasury Tax,Monthly,Dividend withholding and franking evidence
+8500,Employee Entertainment,EMPLOYEE_BENEFIT,FBT_REVIEW,Employment Tax,Monthly,FBT evidence and private-use review
+8510,Fleet Benefits,EMPLOYEE_BENEFIT,FBT_REVIEW,Employment Tax,Monthly,FBT logbook/private-use review
+8600,R&D Prototype Materials,R_AND_D,R_AND_D_REVIEW,R&D Tax,Quarterly,R&D activity and expenditure mapping
+8610,R&D Contractor Costs,R_AND_D,R_AND_D_REVIEW,R&D Tax,Quarterly,R&D eligibility and overseas-cost review
+8700,Managed Investment Trust Distributions,TRUST_DISTRIBUTION,TRUST_DISTRIBUTION_REVIEW,Funds Tax,Monthly,MIT distribution withholding review
+8710,Family Business Trust Distributions,TRUST_DISTRIBUTION,TRUST_DISTRIBUTION_REVIEW,Private Tax,Annual,Trust resolution and entitlement evidence
+8800,Imported Services,IMPORT_SERVICE,REVERSE_CHARGE_REVIEW,Indirect Tax,Monthly,Cross-border service review
+8810,Imported Goods,IMPORT_GOODS,GST_TAXABLE,Indirect Tax,Monthly,Customs/import GST statement review
+8900,Capital Equipment,CAPEX,CAPEX_REVIEW,Finance Operations,Monthly,Asset register and GST credit support
+9000,Income Tax Provision,JOURNAL,TAX_PROVISION_REVIEW,Tax Reporting,Quarterly,Tax provision review
+9010,Deferred Tax Journal,JOURNAL,TAX_PROVISION_REVIEW,Tax Reporting,Quarterly,Deferred tax review
+9100,Derivative Gains,INVESTMENT,FINANCIAL_SUPPLY_REVIEW,Treasury Tax,Monthly,Financial instrument tax classification
+9110,FX Hedge Losses,INVESTMENT,FINANCIAL_SUPPLY_REVIEW,Treasury Tax,Monthly,Financial instrument tax classification
