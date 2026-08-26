@@ -1,0 +1,14 @@
+transaction_id,expected_tax_category,expected_gst_amount,expected_exception
+TXN-0001,GST_TAXABLE,120.00,false
+TXN-0002,GST_FREE,0.00,false
+TXN-0003,GST_TAXABLE,30.00,false
+TXN-0004,GST_TAXABLE,54.00,false
+TXN-0005,INPUT_TAXED,0.00,false
+TXN-0006,OUT_OF_SCOPE,0.00,false
+TXN-0007,NEEDS_REVIEW,,true
+TXN-0008,GST_TAXABLE,150.00,true
+TXN-0009,NEEDS_REVIEW,,true
+TXN-0010,NEEDS_REVIEW,,true
+TXN-0011,GST_TAXABLE,-8.00,false
+TXN-0012,GST_TAXABLE,0.00,false
+
