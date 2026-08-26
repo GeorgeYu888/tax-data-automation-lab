@@ -6,7 +6,7 @@ from pathlib import Path
 import duckdb
 
 from .io import ensure_output_dir, read_csv, read_yaml
-from .reconciliation import build_exception_report, build_summary, reconcile
+from .reconciliation import build_exception_report, build_scenario_summary, build_summary, reconcile
 from .reporting import render_audit_summary
 from .rules_engine import classify_transactions
 from .validation import normalise_transactions, validate_transactions
@@ -42,11 +42,13 @@ def run_pipeline(paths: PipelinePaths) -> PipelineSummary:
     reconciled = reconcile(classified, validation_issues)
     exceptions = build_exception_report(reconciled, validation_issues)
     summary = build_summary(reconciled)
+    scenario_summary = build_scenario_summary(reconciled)
     golden_comparison = _compare_with_golden(reconciled, golden)
 
     clean_path = paths.output_dir / "clean_transactions.csv"
     exception_path = paths.output_dir / "exception_report.csv"
     summary_path = paths.output_dir / "reconciliation_summary.csv"
+    scenario_summary_path = paths.output_dir / "scenario_summary.csv"
     validation_path = paths.output_dir / "validation_issues.csv"
     golden_path = paths.output_dir / "golden_comparison.csv"
     duckdb_path = paths.output_dir / "tax_automation.duckdb"
@@ -55,6 +57,7 @@ def run_pipeline(paths: PipelinePaths) -> PipelineSummary:
     reconciled.to_csv(clean_path, index=False)
     exceptions.to_csv(exception_path, index=False)
     summary.to_csv(summary_path, index=False)
+    scenario_summary.to_csv(scenario_summary_path, index=False)
     validation_issues.to_csv(validation_path, index=False)
     golden_comparison.to_csv(golden_path, index=False)
 
@@ -62,11 +65,20 @@ def run_pipeline(paths: PipelinePaths) -> PipelineSummary:
         reconciled=reconciled,
         exceptions=exceptions,
         summary=summary,
+        scenario_summary=scenario_summary,
         ruleset_name=rules_config.get("metadata", {}).get("ruleset_name", "unknown"),
         ruleset_version=rules_config.get("metadata", {}).get("version", "unknown"),
     )
     audit_path.write_text(audit_summary, encoding="utf-8")
-    _write_duckdb(duckdb_path, reconciled, exceptions, summary, validation_issues, golden_comparison)
+    _write_duckdb(
+        duckdb_path,
+        reconciled,
+        exceptions,
+        summary,
+        scenario_summary,
+        validation_issues,
+        golden_comparison,
+    )
 
     return PipelineSummary(
         total_transactions=len(reconciled),
@@ -105,18 +117,27 @@ def _gst_expected(row) -> bool:
     return abs(float(row["expected_gst_amount"]) - float(row["actual_gst_amount"])) <= 0.01
 
 
-def _write_duckdb(path: Path, reconciled, exceptions, summary, validation_issues, golden_comparison) -> None:
+def _write_duckdb(
+    path: Path,
+    reconciled,
+    exceptions,
+    summary,
+    scenario_summary,
+    validation_issues,
+    golden_comparison,
+) -> None:
     if path.exists():
         path.unlink()
     with duckdb.connect(str(path)) as con:
         con.register("reconciled_df", reconciled)
         con.register("exceptions_df", exceptions)
         con.register("summary_df", summary)
+        con.register("scenario_summary_df", scenario_summary)
         con.register("validation_df", validation_issues)
         con.register("golden_df", golden_comparison)
         con.execute("create table clean_transactions as select * from reconciled_df")
         con.execute("create table exception_report as select * from exceptions_df")
         con.execute("create table reconciliation_summary as select * from summary_df")
+        con.execute("create table scenario_summary as select * from scenario_summary_df")
         con.execute("create table validation_issues as select * from validation_df")
         con.execute("create table golden_comparison as select * from golden_df")
-
