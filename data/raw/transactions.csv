@@ -1,0 +1,14 @@
+transaction_id,transaction_date,entity,supplier_customer,account_code,transaction_type,jurisdiction,net_amount,supplied_gst_amount,tax_invoice_available,ledger_tax_category,description
+TXN-0001,2026-07-01,DemoCo AU,Metro Retail Pty Ltd,4000,SALE,AU,1200.00,120.00,true,GST_TAXABLE,Domestic taxable sale
+TXN-0002,2026-07-02,DemoCo AU,Pacific Export Ltd,4010,SALE,EXPORT,850.00,0.00,true,GST_FREE,Export sale
+TXN-0003,2026-07-03,DemoCo AU,Office Supplies Co,5100,EXPENSE,AU,300.00,30.00,true,GST_TAXABLE,Stationery and supplies
+TXN-0004,2026-07-04,DemoCo AU,Cloud Tools Vendor,5200,EXPENSE,AU,540.00,54.00,true,GST_TAXABLE,Software subscription
+TXN-0005,2026-07-05,DemoCo AU,Big Bank,6200,EXPENSE,AU,42.00,0.00,true,INPUT_TAXED,Bank merchant fee
+TXN-0006,2026-07-06,DemoCo AU,Payroll Batch,7000,PAYROLL,AU,4200.00,0.00,false,OUT_OF_SCOPE,Wages
+TXN-0007,2026-07-07,DemoCo AU,Warehouse Services,5100,EXPENSE,AU,900.00,90.00,false,GST_TAXABLE,Missing invoice but GST claimed
+TXN-0008,2026-07-08,DemoCo AU,Metro Retail Pty Ltd,4000,SALE,AU,1500.00,140.00,true,GST_TAXABLE,GST amount does not reconcile
+TXN-0009,2026-07-09,DemoCo AU,Unknown Vendor,9999,EXPENSE,AU,210.00,21.00,true,GST_TAXABLE,Unknown account mapping
+TXN-0010,2026-07-10,DemoCo AU,Intercompany Recharge,4990,SALE,INTERCOMPANY,725.00,0.00,true,OUT_OF_SCOPE,Unmapped intercompany recharge
+TXN-0011,2026-07-11,DemoCo AU,Office Supplies Co,5100,EXPENSE,AU,-80.00,-8.00,true,GST_TAXABLE,Credit note
+TXN-0012,2026-07-12,DemoCo AU,Cloud Tools Vendor,5200,EXPENSE,AU,0.00,0.00,true,GST_TAXABLE,Zero value test record
+
