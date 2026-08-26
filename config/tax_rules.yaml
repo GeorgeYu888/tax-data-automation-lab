@@ -1,9 +1,12 @@
 metadata:
-  ruleset_name: demo_gst_classification_rules
-  version: "2026.08"
+  ruleset_name: enterprise_tax_automation_demo_rules
+  version: "2026.08-enterprise"
   description: >
-    Simplified demo rules for classifying synthetic finance transactions.
-    These rules are for portfolio demonstration only and are not tax advice.
+    Simplified demo rules for classifying synthetic enterprise finance
+    transactions across GST, cross-border payments, related-party dealings,
+    employment tax, R&D, trust/fund distributions, tax provisioning and
+    treasury scenarios. These rules are for portfolio demonstration only and
+    are not tax advice.
 
 defaults:
   tax_category: NEEDS_REVIEW
@@ -11,8 +14,180 @@ defaults:
   review_reason: "No matching classification rule"
 
 rules:
+  - id: MISSING_TAX_INVOICE_REVIEW
+    priority: 5
+    description: GST-bearing supplier expense without a tax invoice requires review.
+    conditions:
+      transaction_type_in: ["EXPENSE", "CAPEX", "ADJUSTMENT"]
+      tax_invoice_available_in: [false]
+      supplied_gst_amount_gt: 0
+    result:
+      tax_category: NEEDS_REVIEW
+      expected_gst_rate: null
+      review_reason: "GST claimed but supporting tax invoice is missing"
+
+  - id: CROSS_BORDER_RELATED_PARTY_TRANSFER_PRICING
+    priority: 8
+    description: Cross-border related-party service or recharge requiring TP documentation.
+    conditions:
+      transaction_type_in: ["INTERCOMPANY"]
+      jurisdiction_in: ["CROSS_BORDER"]
+      related_party_in: [true]
+    result:
+      tax_category: TRANSFER_PRICING_REVIEW
+      expected_gst_rate: 0.00
+      review_reason: "Related-party cross-border transaction requires transfer pricing documentation review"
+
+  - id: DOMESTIC_GROUP_CONSOLIDATION_ELIMINATION
+    priority: 12
+    description: Domestic wholly owned group recharge flagged for income-tax consolidation elimination.
+    conditions:
+      account_code_in: ["4990"]
+      jurisdiction_in: ["INTERCOMPANY"]
+      related_party_in: [true]
+    result:
+      tax_category: CONSOLIDATION_ELIMINATION
+      expected_gst_rate: 0.00
+      review_reason: ""
+
+  - id: FOREIGN_ROYALTY_WITHHOLDING_REVIEW
+    priority: 15
+    description: Royalty paid offshore requires withholding and treaty-evidence review.
+    conditions:
+      transaction_type_in: ["ROYALTY"]
+      jurisdiction_in: ["CROSS_BORDER"]
+    result:
+      tax_category: WHT_REVIEW
+      expected_gst_rate: 0.00
+      review_reason: "Offshore royalty payment requires withholding tax and treaty evidence review"
+
+  - id: FOREIGN_INTEREST_WITHHOLDING_REVIEW
+    priority: 16
+    description: Interest paid offshore requires withholding and debt-pricing review.
+    conditions:
+      transaction_type_in: ["INTEREST"]
+      jurisdiction_in: ["CROSS_BORDER"]
+    result:
+      tax_category: WHT_REVIEW
+      expected_gst_rate: 0.00
+      review_reason: "Offshore interest payment requires withholding tax and funding evidence review"
+
+  - id: FOREIGN_DIVIDEND_WITHHOLDING_REVIEW
+    priority: 17
+    description: Dividend paid offshore requires franking and withholding review.
+    conditions:
+      transaction_type_in: ["DIVIDEND"]
+      jurisdiction_in: ["CROSS_BORDER"]
+    result:
+      tax_category: WHT_REVIEW
+      expected_gst_rate: 0.00
+      review_reason: "Offshore dividend distribution requires franking and withholding evidence review"
+
+  - id: EMPLOYEE_BENEFIT_FBT_REVIEW
+    priority: 20
+    description: Employee entertainment and fleet costs require employment tax review.
+    conditions:
+      transaction_type_in: ["EMPLOYEE_BENEFIT"]
+    result:
+      tax_category: FBT_REVIEW
+      expected_gst_rate: 0.10
+      review_reason: "Employee benefit record requires FBT evidence and private-use review"
+
+  - id: OVERSEAS_R_AND_D_EXPENDITURE_REVIEW
+    priority: 24
+    description: Overseas contractor costs tagged to R&D require additional eligibility review.
+    conditions:
+      transaction_type_in: ["R_AND_D"]
+      jurisdiction_in: ["CROSS_BORDER"]
+    result:
+      tax_category: R_AND_D_REVIEW
+      expected_gst_rate: 0.00
+      review_reason: "Overseas R&D-tagged expenditure requires eligibility and supporting evidence review"
+
+  - id: R_AND_D_ACTIVITY_EXPENDITURE_REVIEW
+    priority: 25
+    description: R&D expenditure requires activity, apportionment and evidence review.
+    conditions:
+      transaction_type_in: ["R_AND_D"]
+    result:
+      tax_category: R_AND_D_REVIEW
+      expected_gst_rate: 0.10
+      review_reason: "R&D-tagged expenditure requires activity and apportionment evidence review"
+
+  - id: TRUST_DISTRIBUTION_REVIEW
+    priority: 30
+    description: Trust and fund distributions require beneficiary and entitlement review.
+    conditions:
+      transaction_type_in: ["TRUST_DISTRIBUTION"]
+    result:
+      tax_category: TRUST_DISTRIBUTION_REVIEW
+      expected_gst_rate: 0.00
+      review_reason: "Trust or fund distribution requires beneficiary, residency and entitlement evidence review"
+
+  - id: IMPORTED_SERVICE_REVERSE_CHARGE_REVIEW
+    priority: 35
+    description: Imported services require cross-border GST/reverse-charge triage.
+    conditions:
+      transaction_type_in: ["IMPORT_SERVICE"]
+      jurisdiction_in: ["CROSS_BORDER"]
+    result:
+      tax_category: REVERSE_CHARGE_REVIEW
+      expected_gst_rate: 0.00
+      review_reason: "Imported service requires cross-border GST treatment review"
+
+  - id: IMPORTED_GOODS_GST
+    priority: 38
+    description: Imported goods with broker GST evidence.
+    conditions:
+      transaction_type_in: ["IMPORT_GOODS"]
+      account_code_in: ["8810"]
+    result:
+      tax_category: GST_TAXABLE
+      expected_gst_rate: 0.10
+      review_reason: ""
+
+  - id: CAPEX_ASSET_REGISTER_REVIEW
+    priority: 40
+    description: Capital equipment purchase requires asset register support.
+    conditions:
+      transaction_type_in: ["CAPEX"]
+    result:
+      tax_category: CAPEX_REVIEW
+      expected_gst_rate: 0.10
+      review_reason: "Capital purchase requires asset register and GST credit support"
+
+  - id: TAX_PROVISION_JOURNAL_REVIEW
+    priority: 45
+    description: Tax provision and deferred tax journals require tax reporting review.
+    conditions:
+      transaction_type_in: ["JOURNAL"]
+    result:
+      tax_category: TAX_PROVISION_REVIEW
+      expected_gst_rate: 0.00
+      review_reason: "Tax provision journal requires tax reporting review"
+
+  - id: FINANCIAL_SUPPLY_REVIEW
+    priority: 50
+    description: Treasury and derivative records require financial supply classification review.
+    conditions:
+      transaction_type_in: ["INVESTMENT"]
+    result:
+      tax_category: FINANCIAL_SUPPLY_REVIEW
+      expected_gst_rate: 0.00
+      review_reason: "Treasury or investment transaction requires financial supply classification review"
+
+  - id: PAYROLL_OUT_OF_SCOPE
+    priority: 55
+    description: Payroll and payroll tax records are outside GST scope in this demo.
+    conditions:
+      transaction_type_in: ["PAYROLL", "PAYROLL_TAX"]
+    result:
+      tax_category: OUT_OF_SCOPE
+      expected_gst_rate: 0.00
+      review_reason: ""
+
   - id: SALES_STANDARD_GST
-    priority: 10
+    priority: 60
     description: Standard domestic taxable sales.
     conditions:
       account_code_in: ["4000"]
@@ -24,7 +199,7 @@ rules:
       review_reason: ""
 
   - id: EXPORT_GST_FREE
-    priority: 20
+    priority: 65
     description: Export sales treated as GST-free in this simplified demo.
     conditions:
       account_code_in: ["4010"]
@@ -35,30 +210,19 @@ rules:
       expected_gst_rate: 0.00
       review_reason: ""
 
-  - id: BANK_FEES_INPUT_TAXED
-    priority: 30
-    description: Bank fees classified as input taxed in this simplified demo.
+  - id: FINANCIAL_FEES_INPUT_TAXED
+    priority: 70
+    description: Bank fees and insurance premiums classified as input taxed in this demo.
     conditions:
-      account_code_in: ["6200"]
+      account_code_in: ["6200", "6250"]
       transaction_type_in: ["EXPENSE"]
     result:
       tax_category: INPUT_TAXED
       expected_gst_rate: 0.00
       review_reason: ""
 
-  - id: WAGES_OUT_OF_SCOPE
-    priority: 40
-    description: Payroll and wages outside GST scope in this simplified demo.
-    conditions:
-      account_code_in: ["7000"]
-      transaction_type_in: ["PAYROLL"]
-    result:
-      tax_category: OUT_OF_SCOPE
-      expected_gst_rate: 0.00
-      review_reason: ""
-
-  - id: OFFICE_EXPENSE_STANDARD_GST
-    priority: 50
+  - id: DOMESTIC_EXPENSE_STANDARD_GST
+    priority: 75
     description: Ordinary domestic supplier expenses with GST.
     conditions:
       account_code_in: ["5100", "5200"]
@@ -69,14 +233,13 @@ rules:
       expected_gst_rate: 0.10
       review_reason: ""
 
-  - id: MISSING_TAX_INVOICE_REVIEW
-    priority: 5
-    description: Any GST-bearing supplier expense without a tax invoice requires review.
+  - id: GST_ADJUSTMENT_NOTE
+    priority: 80
+    description: GST adjustment notes and credit notes.
     conditions:
-      transaction_type_in: ["EXPENSE"]
-      tax_invoice_available_in: [false]
-      supplied_gst_amount_gt: 0
+      account_code_in: ["5100", "5300"]
+      transaction_type_in: ["ADJUSTMENT"]
     result:
-      tax_category: NEEDS_REVIEW
-      expected_gst_rate: null
-      review_reason: "GST claimed but tax invoice missing"
+      tax_category: GST_TAXABLE
+      expected_gst_rate: 0.10
+      review_reason: ""
